@@ -11,4 +11,6 @@
     <string name="errorConnection">Ошибка: </string>
     <string name="passwordIncorrect">Доброе время суток! </string>
     <string name="passwordNotIncorrect">Неверно введен пароль!</string>
+    <string name="search">Поиск</string>
+    <string name="clear_search">Очистить поиск</string>
 </resources>

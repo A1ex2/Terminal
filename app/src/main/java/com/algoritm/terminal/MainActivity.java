@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.UIManager;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private ArrayList<Reception> mReceptions = new ArrayList<>();
+    private ProgressBar progressBar;
 
     public static final int ACTION_RECEPTION_LIST = 12;
 
@@ -38,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setHasOptionsMenu(true);
+
         setContentView(R.layout.activity_main);
 
         mListView = findViewById(R.id.listReception);
@@ -56,6 +62,14 @@ public class MainActivity extends AppCompatActivity {
         ReceptionAdapter adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
         mListView.setAdapter(adapter);
 
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
     }
 
     @Override
@@ -126,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
             ReceptionAdapter adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
             mListView.setAdapter(adapter);
 
+            progressBar.setVisibility(ProgressBar.INVISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
         }

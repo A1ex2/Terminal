@@ -60,7 +60,7 @@ public class SOAP_Dispatcher extends Thread {
                 break;
         }
 
-        if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_VERIFY) {
+        if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST) {
             if (soap_Response != null) {
                 Password.soapParam_Response = soap_Response;
                 Password.soapHandler.sendEmptyMessage(ACTION);
