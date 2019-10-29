@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Terminal</string>
+    <string name="password_form_header">Ваш логин/пароль...</string>
+    <string name="login">логин</string>
+    <string name="password">пароль</string>
+    <string name="butt_OK">OK</string>
+    <string name="success">Все ОК</string>
+    <string name="error">Доступ запрещен!</string>
+    <string name="textNoInternet">Что-то с интернет доступом!</string>
+    <string name="unknownError">Неизвестная ошибка!</string>
+    <string name="errorConnection">Ошибка: </string>
+    <string name="passwordIncorrect">Доброе время суток! </string>
+    <string name="passwordNotIncorrect">Неверно введен пароль!</string>
+</resources>
