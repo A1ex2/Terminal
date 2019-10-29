@@ -7,15 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.UIManager;
@@ -24,7 +20,6 @@ import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Password extends AppCompatActivity {
@@ -84,8 +79,6 @@ public class Password extends AppCompatActivity {
         mLogin = login.getText().toString();
         mPassword = password.getText().toString();
 
-        //Toast.makeText(getApplicationContext(), "Проверка логина...", Toast.LENGTH_LONG).show();
-
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_VERIFY);
         dispatcher.start();
 
@@ -108,12 +101,10 @@ public class Password extends AppCompatActivity {
 
             switch (msg.what) {
                 case ACTION_ConnectionError:
-                    Log.d("LoadData", "доступ запрещен");
                     uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
                     break;
                 case ACTION_VERIFY: {
                     target.checkLoginResult();
-                    Log.d("LoadData", "доступ разрешен");
 
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("Login", mLogin);

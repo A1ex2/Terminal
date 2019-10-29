@@ -1,20 +1,19 @@
 package com.algoritm.terminal;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.view.MenuItem;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.UIManager;
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView mListView;
     private ArrayList<Reception> mReceptions = new ArrayList<>();
     private ProgressBar progressBar;
+    private ReceptionAdapter adapter;
 
     public static final int ACTION_RECEPTION_LIST = 12;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, login, password);
         dispatcher.start();
 
-        ReceptionAdapter adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
+        adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
         mListView.setAdapter(adapter);
 
         progressBar = findViewById(R.id.progressBar);
@@ -69,6 +69,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+//                adapter.notifyDataSetChanged();
+                mListView.invalidateViews();
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -137,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
                 mReceptions.add(reception);
             }
 
-            ReceptionAdapter adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
+            adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
+            //adapter.notifyDataSetChanged();
             mListView.setAdapter(adapter);
 
             progressBar.setVisibility(ProgressBar.INVISIBLE);
