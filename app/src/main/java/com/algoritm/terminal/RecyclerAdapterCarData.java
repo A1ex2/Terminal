@@ -58,17 +58,19 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
     }
 
     public class CarDataViewHolder extends RecyclerView.ViewHolder {
-        public View itemView;
-        private TextView itemDescription;
+        private TextView itemCar;
+        private TextView itemBarCode;
 
         public CarDataViewHolder(View itemView) {
             super(itemView);
 
-            itemDescription = itemView.findViewById(R.id.itemDescription);
+            itemCar = itemView.findViewById(R.id.itemCar);
+            itemBarCode = itemView.findViewById(R.id.itemBarCode);
         }
 
         public void set(CarData carData) {
-            itemDescription.setText(carData.toString());
+            itemCar.setText(carData.getCar());
+            itemBarCode.setText(carData.getBarCode());
         }
     }
 }

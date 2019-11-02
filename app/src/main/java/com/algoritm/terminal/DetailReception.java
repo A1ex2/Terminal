@@ -36,7 +36,7 @@ public class DetailReception extends AppCompatActivity {
 
         RecyclerAdapterCarData adapter = new RecyclerAdapterCarData(this, R.layout.item_activity_detail, reception.getCarData());
         recyclerView.setAdapter(adapter);
-        adapter.setActionListener(mClick);
+        //adapter.setActionListener(mClick);
     }
 
     private RecyclerAdapterCarData.ActionListener mClick = new RecyclerAdapterCarData.ActionListener() {
