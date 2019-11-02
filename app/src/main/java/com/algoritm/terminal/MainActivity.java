@@ -1,8 +1,8 @@
 package com.algoritm.terminal;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +10,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Filter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -19,7 +20,9 @@ import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.UIManager;
 
 import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -62,6 +65,19 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
         mListView.setAdapter(adapter);
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Reception reception = mReceptions.get(position);
+
+                //uiManager.showToast(reception.toString());
+
+                Intent intent = new Intent(view.getContext(), DetailReception.class);
+                intent.putExtra("Reception", reception);
+                startActivity(intent);
+            }
+        });
+
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(ProgressBar.VISIBLE);
     }
@@ -82,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 adapter.getFilter().filter(newText);
-//                adapter.notifyDataSetChanged();
                 mListView.invalidateViews();
                 return false;
             }
@@ -153,6 +168,29 @@ public class MainActivity extends AppCompatActivity {
                 reception.setDriverPhone(receptionList.getPropertyAsString("DriverPhone"));
                 reception.setInvoiceNumber(receptionList.getPropertyAsString("InvoiceNumber"));
 
+                ArrayList<CarData> carDataList = new ArrayList<>();
+
+                for (int j = 0; j < receptionList.getPropertyCount(); j++) {
+                    PropertyInfo pi = new PropertyInfo();
+                    receptionList.getPropertyInfo(j, pi);
+                    Object property = receptionList.getProperty(j);
+                    if (pi.name.equals("CarData") && property instanceof SoapObject) {
+                        SoapObject carDetail = (SoapObject) property;
+
+                        CarData carData = new CarData();
+                        carData.setCarID(carDetail.getPrimitivePropertyAsString("CarID"));
+                        carData.setCar(carDetail.getPrimitivePropertyAsString("Car"));
+                        carData.setBarCode(carDetail.getPrimitivePropertyAsString("BarCode"));
+                        carData.setSectorID(carDetail.getPrimitivePropertyAsString("SectorID"));
+                        carData.setSector(carDetail.getPrimitivePropertyAsString("Sector"));
+                        carData.setRow(carDetail.getPrimitivePropertyAsString("Row"));
+                        carData.setProductionDate(carDetail.getPrimitivePropertyAsString("ProductionDate"));
+
+                        carDataList.add(carData);
+                    }
+                }
+                reception.setCarData(carDataList);
+
                 mReceptions.add(reception);
             }
 
@@ -165,5 +203,4 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }

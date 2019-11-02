@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/itemCar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="TMAJ3813DKJ882739, TUCSON," />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/itemBarCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="2000000588964" />
+
+        <TextView
+            android:id="@+id/itemProductionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="01.01.2000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/itemSector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="G" />
+
+            <TextView
+                android:id="@+id/itemRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:textAllCaps="false"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="55" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
