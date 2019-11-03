@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -54,6 +55,19 @@ public class Password extends AppCompatActivity {
 
         login = findViewById(R.id.login);
         password = findViewById(R.id.password);
+        password.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    verify();
+                    return true;
+                }
+                return false;
+
+            }
+        });
 
         ok = findViewById(R.id.butt_OK);
         ok.setOnClickListener(new View.OnClickListener() {

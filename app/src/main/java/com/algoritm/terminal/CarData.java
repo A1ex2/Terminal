@@ -74,6 +74,15 @@ public class CarData implements Parcelable {
         return productionDate;
     }
 
+    public String getProductionDateString() {
+
+        String pattern = "MM.dd.yyyy";
+        DateFormat df = new SimpleDateFormat(pattern);
+        String date = df.format(productionDate);
+
+        return date;
+    }
+
     public void setProductionDate(Date productionDate) {
         this.productionDate = productionDate;
     }

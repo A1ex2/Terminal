@@ -1,9 +1,11 @@
 package com.algoritm.terminal;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -13,6 +15,9 @@ public class DetailReception extends AppCompatActivity {
     private TextView driver;
     private TextView autoNumber;
     private RecyclerView recyclerView;
+
+    private static final int REQUEST_CODE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +41,20 @@ public class DetailReception extends AppCompatActivity {
 
         RecyclerAdapterCarData adapter = new RecyclerAdapterCarData(this, R.layout.item_activity_detail, reception.getCarData());
         recyclerView.setAdapter(adapter);
-        //adapter.setActionListener(mClick);
+        adapter.setActionListener(new RecyclerAdapterCarData.ActionListener() {
+            @Override
+            public void onClick(CarData carData) {
+                Intent intent = new Intent(DetailReception.this, CarActivity.class);
+                intent.putExtra("CarData", carData);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
     }
 
-    private RecyclerAdapterCarData.ActionListener mClick = new RecyclerAdapterCarData.ActionListener() {
-        @Override
-        public void onClick(CarData carData) {
-            mActionListener.edit(carData);
-        }
-    };
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    public interface ActionListener {
-        public void edit(CarData carData);
-    }
 
-    private ActionListener mActionListener;
-
-    public void setActionListener(ActionListener actionListener) {
-        mActionListener = actionListener;
     }
 }

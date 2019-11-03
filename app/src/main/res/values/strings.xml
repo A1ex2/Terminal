@@ -13,4 +13,7 @@
     <string name="passwordNotIncorrect">Неверно введен пароль!</string>
     <string name="search">Поиск</string>
     <string name="clear_search">Очистить поиск</string>
+    <string name="textDate">Дата производства:</string>
+    <string name="textSector">Сектор:</string>
+    <string name="textRow">Номер ряда:</string>
 </resources>
