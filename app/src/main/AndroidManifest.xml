@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CarActivity"/>
+            android:name=".CarActivity"
+            android:theme="@style/NoActionBar"/>
 <!--            android:parentActivityName="com.algoritm.terminal.DetailReception" />-->
             />
         <activity

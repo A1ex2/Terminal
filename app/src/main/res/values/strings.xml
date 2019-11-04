@@ -16,4 +16,5 @@
     <string name="textDate">Дата производства:</string>
     <string name="textSector">Сектор:</string>
     <string name="textRow">Номер ряда:</string>
+    <string name="edit">Данные по авто..</string>
 </resources>

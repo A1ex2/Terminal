@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class CarActivity extends AppCompatActivity {
     private TextView car;
@@ -26,7 +27,7 @@ public class CarActivity extends AppCompatActivity {
     private EditText editDate;
     private EditText editSector;
     private EditText editRow;
-    private Button buttonOk;
+//    private Button buttonOk;
 
     private CarData carData;
     private Calendar dateAndTime = Calendar.getInstance();
@@ -41,8 +42,22 @@ public class CarActivity extends AppCompatActivity {
 
         car = findViewById(R.id.car);
         barCode = findViewById(R.id.barCode);
-
         editDate = findViewById(R.id.editDate);
+        editSector = findViewById(R.id.editSector);
+        editRow = findViewById(R.id.editRow);
+
+        Intent intent = getIntent();
+        carData = intent.getParcelableExtra("CarData");
+        car.setText(carData.getCar());
+        barCode.setText(carData.getBarCode());
+
+        editDate.setText(carData.getProductionDateString());
+
+        editSector.setText(carData.getSector());
+        editRow.setText(carData.getRow());
+
+
+        dateAndTime.setTime(carData.getProductionDate());
 
         editDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -64,6 +79,10 @@ public class CarActivity extends AppCompatActivity {
             }
         });
 
+        editDate.addTextChangedListener(getTextWatcher());
+    }
+
+    private TextWatcher getTextWatcher() {
         TextWatcher tw = new TextWatcher() {
             private String current = "";
             private String ddmmyyyy = "DDMMYYYY";
@@ -125,45 +144,14 @@ public class CarActivity extends AppCompatActivity {
 
             }
         };
-        editDate.addTextChangedListener(tw);
 
-//        editDate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new DatePickerDialog(CarActivity.this, d,
-//                        dateAndTime.get(Calendar.YEAR),
-//                        dateAndTime.get(Calendar.MONTH),
-//                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-//                        .show();
-//            }
-//        });
-
-        editSector = findViewById(R.id.editSector);
-        editRow = findViewById(R.id.editRow);
-
-        buttonOk = findViewById(R.id.OK);
-        buttonOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        Intent intent = getIntent();
-        carData = intent.getParcelableExtra("CarData");
-        car.setText(carData.getCar());
-        barCode.setText(carData.getBarCode());
-
-        editDate.setText(carData.getProductionDateString());
-
-        editSector.setText(carData.getSector());
-        editRow.setText(carData.getRow());
-
+        return tw;
     }
+
 
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
             dateAndTime.set(Calendar.YEAR, year);
             dateAndTime.set(Calendar.MONTH, monthOfYear);
             dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -172,6 +160,8 @@ public class CarActivity extends AppCompatActivity {
     };
 
     private void setInitialDateTime() {
+        Date date = dateAndTime.getTime();
+
         carData.setProductionDate(dateAndTime.getTime());
         editDate.setText(carData.getProductionDateString());
     }
