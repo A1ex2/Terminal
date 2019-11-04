@@ -37,6 +37,8 @@ public class CarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car);
 
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         car = findViewById(R.id.car);
         barCode = findViewById(R.id.barCode);
 
