@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ReceptionAdapter adapter;
 
+    public static ArrayList<Sector> SECTORS = new ArrayList<>();
+
     public static final int ACTION_RECEPTION_LIST = 12;
+    public static final int ACTION_SECTORS_LIST = 13;
 
     public static final int ACTION_ConnectionError = 0;
     public static UIManager uiManager;
@@ -131,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
                 case ACTION_RECEPTION_LIST: {
                     target.checkLoginListResult();
                 }
+                case ACTION_SECTORS_LIST: {
+                    target.checkSectorList();
+                }
                 break;
             }
         }
@@ -195,12 +201,29 @@ public class MainActivity extends AppCompatActivity {
             }
 
             adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
-            //adapter.notifyDataSetChanged();
             mListView.setAdapter(adapter);
 
             progressBar.setVisibility(ProgressBar.INVISIBLE);
+
+//            SOAP_Dispatcher dispatcher2 = new SOAP_Dispatcher(ACTION_SECTORS_LIST);
+//            dispatcher2.start();
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void checkSectorList() {
+        int count = soapParam_Response.getPropertyCount();
+
+        for (int i = 0; i < count; i++) {
+            SoapObject sectorList = (SoapObject) soapParam_Response.getProperty(i);
+
+            Sector sector = new Sector();
+            sector.setID(sectorList.getPrimitivePropertyAsString("ID"));
+            sector.setName(sectorList.getPrimitivePropertyAsString("Name"));
+
+            SECTORS.add(sector);
         }
     }
 }

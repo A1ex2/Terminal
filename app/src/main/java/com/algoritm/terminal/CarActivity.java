@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CarActivity extends AppCompatActivity {
@@ -32,6 +33,8 @@ public class CarActivity extends AppCompatActivity {
     private CarData carData;
     private Calendar dateAndTime = Calendar.getInstance();
 
+    private ArrayList<Sector> mSectors;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class CarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car);
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mSectors.addAll(MainActivity.SECTORS);
 
         car = findViewById(R.id.car);
         barCode = findViewById(R.id.barCode);

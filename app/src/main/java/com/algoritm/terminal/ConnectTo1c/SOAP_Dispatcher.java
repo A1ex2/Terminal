@@ -58,6 +58,9 @@ public class SOAP_Dispatcher extends Thread {
             case MainActivity.ACTION_RECEPTION_LIST:
                 getReceptionList();
                 break;
+            case MainActivity.ACTION_SECTORS_LIST:
+                getSectors();
+                break;
         }
 
         if (ACTION == Password.ACTION_VERIFY | ACTION == Password.ACTION_LOGIN_LIST) {
@@ -67,7 +70,7 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 Password.soapHandler.sendEmptyMessage(Password.ACTION_ConnectionError);
             }
-        } else if (ACTION == MainActivity.ACTION_RECEPTION_LIST) {
+        } else if (ACTION == MainActivity.ACTION_RECEPTION_LIST | ACTION == MainActivity.ACTION_SECTORS_LIST) {
             if (soap_Response != null) {
                 MainActivity.soapParam_Response = soap_Response;
                 MainActivity.soapHandler.sendEmptyMessage(ACTION);
@@ -104,22 +107,16 @@ public class SOAP_Dispatcher extends Thread {
         String wsParam_PassHash = AeSimpleSHA1.getPassHash(Password.mPassword);
         request.addProperty("Password", wsParam_PassHash);
         soap_Response = callWebService(request, action);
+
     }
 
-    void getCells() {
+    void getSectors() {
 
-//        String method = "GetCellList";
-//        String action = NAMESPACE + "#returnCells:" + method;
-//        SoapObject request = new SoapObject(NAMESPACE, method);
-//        soap_Response = callWebService(request, action);
-    }
+        String method = "GetSectorList";
+        String action = NAMESPACE + "#returnSectors:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        soap_Response = callWebService(request, action);
 
-    void getProducts() {
-
-//        String method = "GetProductList";
-//        String action = NAMESPACE + "#returnProducts:" + method;
-//        SoapObject request = new SoapObject(NAMESPACE, method);
-//        soap_Response = callWebService(request, action);
     }
 
     private SoapObject callWebService(SoapObject request, String action) {
