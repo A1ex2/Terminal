@@ -8,17 +8,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class CarActivity extends AppCompatActivity {
     private TextView car;
@@ -27,7 +26,8 @@ public class CarActivity extends AppCompatActivity {
     private EditText editDate;
     private EditText editSector;
     private EditText editRow;
-//    private Button buttonOk;
+    private ImageView imageOk;
+    private ImageView imageCancel;
 
     private CarData carData;
     private Calendar dateAndTime = Calendar.getInstance();
@@ -45,6 +45,23 @@ public class CarActivity extends AppCompatActivity {
         editDate = findViewById(R.id.editDate);
         editSector = findViewById(R.id.editSector);
         editRow = findViewById(R.id.editRow);
+        imageOk = findViewById(R.id.imageOk);
+        imageCancel = findViewById(R.id.imageCancel);
+
+        imageOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Запись данных...", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
+        imageCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         carData = intent.getParcelableExtra("CarData");
@@ -160,8 +177,6 @@ public class CarActivity extends AppCompatActivity {
     };
 
     private void setInitialDateTime() {
-        Date date = dateAndTime.getTime();
-
         carData.setProductionDate(dateAndTime.getTime());
         editDate.setText(carData.getProductionDateString());
     }
