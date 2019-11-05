@@ -1,15 +1,20 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Activity;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
+
+import com.algoritm.terminal.DataBase.SharedData;
+import com.algoritm.terminal.Objects.CarData;
+import com.algoritm.terminal.R;
+import com.algoritm.terminal.Objects.Reception;
+import com.algoritm.terminal.Adapters.RecyclerAdapterCarData;
 
 public class DetailReception extends AppCompatActivity {
     private Reception reception;
@@ -17,6 +22,7 @@ public class DetailReception extends AppCompatActivity {
     private TextView driver;
     private TextView autoNumber;
     private RecyclerView recyclerView;
+    private RecyclerAdapterCarData adapter;
 
     private static final int REQUEST_CODE = 1;
 
@@ -26,9 +32,11 @@ public class DetailReception extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_reception);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        reception = getIntent().getParcelableExtra("Reception");
+//        reception = getIntent().getParcelableExtra("Reception");
+        String id = getIntent().getStringExtra("Reception");
+        reception = SharedData.getReception(id);
 
         description = findViewById(R.id.description);
         description.setText(reception.getDescription());
@@ -43,7 +51,7 @@ public class DetailReception extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerAdapterCarData adapter = new RecyclerAdapterCarData(this, R.layout.item_activity_detail, reception.getCarData());
+        adapter = new RecyclerAdapterCarData(this, R.layout.item_activity_detail, reception.getCarData());
         recyclerView.setAdapter(adapter);
         adapter.setActionListener(new RecyclerAdapterCarData.ActionListener() {
             @Override
@@ -55,10 +63,15 @@ public class DetailReception extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                recyclerView.invalidate();
+            }
+        }
 
     }
 }

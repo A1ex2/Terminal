@@ -1,4 +1,4 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
+
+import com.algoritm.terminal.R;
+import com.algoritm.terminal.Objects.Reception;
 
 import java.util.ArrayList;
 

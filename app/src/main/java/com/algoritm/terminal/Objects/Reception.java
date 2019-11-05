@@ -1,7 +1,8 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import java.util.ArrayList;
 
 
@@ -103,8 +104,8 @@ public class Reception implements Parcelable {
         this.Driver = in.readString();
         this.DriverPhone = in.readString();
         this.InvoiceNumber = in.readString();
-        this.CarData = new ArrayList<com.algoritm.terminal.CarData>();
-        in.readList(this.CarData, com.algoritm.terminal.CarData.class.getClassLoader());
+        this.CarData = new ArrayList<com.algoritm.terminal.Objects.CarData>();
+        in.readList(this.CarData, com.algoritm.terminal.Objects.CarData.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Reception> CREATOR = new Parcelable.Creator<Reception>() {

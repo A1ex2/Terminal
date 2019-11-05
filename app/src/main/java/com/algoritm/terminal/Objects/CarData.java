@@ -1,4 +1,4 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class CarData implements Parcelable {
     public String getCarID() {
@@ -18,11 +17,25 @@ public class CarData implements Parcelable {
         this.carID = carID;
     }
 
+    private String ReceptionID;
     private String carID;
     private String car;
     private String barCode;
     private String sectorID;
     private String sector;
+    private String row;
+    private Date productionDate;
+
+    public CarData() {
+    }
+
+    public String getReceptionID() {
+        return ReceptionID;
+    }
+
+    public void setReceptionID(String receptionID) {
+        ReceptionID = receptionID;
+    }
 
     public String getSectorID() {
         return sectorID;
@@ -30,12 +43,6 @@ public class CarData implements Parcelable {
 
     public void setSectorID(String sectorID) {
         this.sectorID = sectorID;
-    }
-
-    private String row;
-    private Date productionDate;
-
-    public CarData() {
     }
 
     public String getCar() {
@@ -111,6 +118,7 @@ public class CarData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.ReceptionID);
         dest.writeString(this.carID);
         dest.writeString(this.car);
         dest.writeString(this.barCode);
@@ -121,6 +129,7 @@ public class CarData implements Parcelable {
     }
 
     protected CarData(Parcel in) {
+        this.ReceptionID = in.readString();
         this.carID = in.readString();
         this.car = in.readString();
         this.barCode = in.readString();
@@ -131,7 +140,7 @@ public class CarData implements Parcelable {
         this.productionDate = tmpProductionDate == -1 ? null : new Date(tmpProductionDate);
     }
 
-    public static final Parcelable.Creator<CarData> CREATOR = new Parcelable.Creator<CarData>() {
+    public static final Creator<CarData> CREATOR = new Creator<CarData>() {
         @Override
         public CarData createFromParcel(Parcel source) {
             return new CarData(source);

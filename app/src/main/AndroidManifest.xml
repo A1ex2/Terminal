@@ -18,16 +18,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".Service.IntentServiceDataBase"
+            android:exported="false"></service>
+
         <activity
-            android:name=".CarActivity"
-            android:theme="@style/NoActionBar"/>
-<!--            android:parentActivityName="com.algoritm.terminal.DetailReception" />-->
-            />
-        <activity
-            android:name=".DetailReception"/>
-<!--            android:parentActivityName="com.algoritm.terminal.MainActivity" />-->
-        <activity android:name=".MainActivity" />
-        <activity android:name=".Password">
+            android:name=".Activity.CarActivity"
+            android:theme="@style/NoActionBar" /> <!-- android:parentActivityName="com.algoritm.terminal.DetailReception" /> -->
+        <activity android:name=".Activity.DetailReception" /> <!-- android:parentActivityName="com.algoritm.terminal.MainActivity" /> -->
+        <activity android:name=".Activity.MainActivity" />
+        <activity android:name=".Activity.Password">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,14 +1,21 @@
 package com.algoritm.terminal.ConnectTo1c;
 
-import android.util.Log;
-
-import com.algoritm.terminal.MainActivity;
-import com.algoritm.terminal.Password;
+import com.algoritm.terminal.Activity.MainActivity;
+import com.algoritm.terminal.Activity.Password;
+import com.algoritm.terminal.DataBase.SharedData;
+import com.algoritm.terminal.Objects.CarData;
+import com.algoritm.terminal.Objects.Reception;
+import com.algoritm.terminal.Objects.Sector;
+import com.algoritm.terminal.Objects.User;
 
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+
+import java.text.ParseException;
+import java.util.ArrayList;
 
 
 public class SOAP_Dispatcher extends Thread {
@@ -16,7 +23,7 @@ public class SOAP_Dispatcher extends Thread {
     public static final Integer soapParam_timeout = 100;
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
-    public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
+    public static String soapParam_URL = "http://gate.algoritm.org.ua:8091/blg_log_test/ws/terminal.1cws";
 
     int timeout;
     String URL;
@@ -70,7 +77,8 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 Password.soapHandler.sendEmptyMessage(Password.ACTION_ConnectionError);
             }
-        } else if (ACTION == MainActivity.ACTION_RECEPTION_LIST | ACTION == MainActivity.ACTION_SECTORS_LIST) {
+        } else if (ACTION == MainActivity.ACTION_RECEPTION_LIST
+                | ACTION == MainActivity.ACTION_SECTORS_LIST) {
             if (soap_Response != null) {
                 MainActivity.soapParam_Response = soap_Response;
                 MainActivity.soapHandler.sendEmptyMessage(ACTION);
@@ -86,6 +94,52 @@ public class SOAP_Dispatcher extends Thread {
         String action = NAMESPACE + "#returnReceptionList:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
+
+        int count = soap_Response.getPropertyCount();
+        ArrayList<Reception> mReceptions = SharedData.RECEPTION;
+        mReceptions.clear();
+
+        for (int i = 0; i < count; i++) {
+            SoapObject receptionList = (SoapObject) soap_Response.getProperty(i);
+
+            Reception reception = new Reception();
+            reception.setID(receptionList.getPropertyAsString("ID"));
+            reception.setDescription(receptionList.getPropertyAsString("Description"));
+            reception.setAutoNumber(receptionList.getPropertyAsString("AutoNumber"));
+            reception.setDriver(receptionList.getPropertyAsString("Driver"));
+            reception.setDriverPhone(receptionList.getPropertyAsString("DriverPhone"));
+            reception.setInvoiceNumber(receptionList.getPropertyAsString("InvoiceNumber"));
+
+            ArrayList<CarData> carDataList = new ArrayList<>();
+
+            for (int j = 0; j < receptionList.getPropertyCount(); j++) {
+                PropertyInfo pi = new PropertyInfo();
+                receptionList.getPropertyInfo(j, pi);
+                Object property = receptionList.getProperty(j);
+                if (pi.name.equals("CarData") && property instanceof SoapObject) {
+                    SoapObject carDetail = (SoapObject) property;
+
+                    CarData carData = new CarData();
+                    carData.setReceptionID(reception.getID());
+                    carData.setCarID(carDetail.getPrimitivePropertyAsString("CarID"));
+                    carData.setCar(carDetail.getPrimitivePropertyAsString("Car"));
+                    carData.setBarCode(carDetail.getPrimitivePropertyAsString("BarCode"));
+                    carData.setSectorID(carDetail.getPrimitivePropertyAsString("SectorID"));
+                    carData.setSector(carDetail.getPrimitivePropertyAsString("Sector"));
+                    carData.setRow(carDetail.getPrimitivePropertyAsString("Row"));
+                    try {
+                        carData.setProductionDate(carDetail.getPrimitivePropertyAsString("ProductionDate"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    carDataList.add(carData);
+                }
+            }
+            reception.setCarData(carDataList);
+
+            mReceptions.add(reception);
+        }
     }
 
     void getLoginList() {
@@ -94,6 +148,18 @@ public class SOAP_Dispatcher extends Thread {
         String action = NAMESPACE + "#returnLoginList:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
+
+        int count = soap_Response.getPropertyCount();
+        ArrayList<User> users = SharedData.USERS;
+        users.clear();
+
+        for (int i = 0; i < count; i++) {
+            SoapObject login = (SoapObject) soap_Response.getProperty(i);
+
+            User user = new User();
+            user.setName(login.getPropertyAsString("Description"));
+            users.add(user);
+        }
     }
 
     void login() {
@@ -117,6 +183,24 @@ public class SOAP_Dispatcher extends Thread {
         SoapObject request = new SoapObject(NAMESPACE, method);
         soap_Response = callWebService(request, action);
 
+        int count = soap_Response.getPropertyCount();
+        ArrayList<Sector> sectors = SharedData.SECTORS;
+        sectors.clear();
+
+        Sector mSector = new Sector();
+        mSector.setID("0");
+        mSector.setName("");
+        sectors.add(mSector);
+
+        for (int i = 0; i < count; i++) {
+            SoapObject sectorList = (SoapObject) soap_Response.getProperty(i);
+
+            Sector sector = new Sector();
+            sector.setID(sectorList.getPrimitivePropertyAsString("ID"));
+            sector.setName(sectorList.getPrimitivePropertyAsString("Name"));
+
+            sectors.add(sector);
+        }
     }
 
     private SoapObject callWebService(SoapObject request, String action) {

@@ -6,7 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static com.algoritm.terminal.Password.wsParam_PassHash;
+import static com.algoritm.terminal.Activity.Password.wsParam_PassHash;
 
 public class AeSimpleSHA1 {
     private static String convertToHex(byte[] data) {

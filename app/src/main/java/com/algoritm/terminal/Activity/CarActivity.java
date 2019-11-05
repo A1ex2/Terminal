@@ -1,21 +1,30 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.algoritm.terminal.DataBase.SharedData;
+import com.algoritm.terminal.Objects.CarData;
+import com.algoritm.terminal.R;
+import com.algoritm.terminal.Objects.Sector;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +34,7 @@ public class CarActivity extends AppCompatActivity {
     private TextView barCode;
 
     private EditText editDate;
-    private EditText editSector;
+    private Spinner editSector;
     private EditText editRow;
     private ImageView imageOk;
     private ImageView imageCancel;
@@ -33,7 +42,7 @@ public class CarActivity extends AppCompatActivity {
     private CarData carData;
     private Calendar dateAndTime = Calendar.getInstance();
 
-    private ArrayList<Sector> mSectors;
+    private ArrayList<Sector> mSectors = SharedData.SECTORS;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -42,7 +51,6 @@ public class CarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car);
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mSectors.addAll(MainActivity.SECTORS);
 
         car = findViewById(R.id.car);
         barCode = findViewById(R.id.barCode);
@@ -55,7 +63,16 @@ public class CarActivity extends AppCompatActivity {
         imageOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Sector mSector = mSectors.get(editSector.getSelectedItemPosition());
+
+                carData.setProductionDate(dateAndTime.getTime());
+                carData.setSectorID(mSector.getID());
+                carData.setSector(mSector.getName());
+                carData.setRow(editRow.getText().toString());
+                SharedData.updateReception(carData);
+
                 Toast.makeText(v.getContext(), "Запись данных...", Toast.LENGTH_LONG).show();
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         });
@@ -74,9 +91,22 @@ public class CarActivity extends AppCompatActivity {
 
         editDate.setText(carData.getProductionDateString());
 
-        editSector.setText(carData.getSector());
-        editRow.setText(carData.getRow());
+        ArrayAdapter<Sector> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mSectors);
+        editSector.setAdapter(adapter);
+//        editSector.setText(carData.getSector());
+        editSector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //editRow.performClick();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        editRow.setText(carData.getRow());
 
         dateAndTime.setTime(carData.getProductionDate());
 
@@ -101,6 +131,14 @@ public class CarActivity extends AppCompatActivity {
         });
 
         editDate.addTextChangedListener(getTextWatcher());
+        editDate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                editSector.performClick();
+//                return true;
+                return false;
+            }
+        });
     }
 
     private TextWatcher getTextWatcher() {
@@ -162,7 +200,6 @@ public class CarActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         };
 
@@ -177,11 +214,13 @@ public class CarActivity extends AppCompatActivity {
             dateAndTime.set(Calendar.MONTH, monthOfYear);
             dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             setInitialDateTime();
+
         }
     };
 
     private void setInitialDateTime() {
         carData.setProductionDate(dateAndTime.getTime());
         editDate.setText(carData.getProductionDateString());
+//        editSector.performClick();
     }
 }

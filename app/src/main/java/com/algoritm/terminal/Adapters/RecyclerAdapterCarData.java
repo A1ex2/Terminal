@@ -1,4 +1,4 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.algoritm.terminal.Objects.CarData;
+import com.algoritm.terminal.R;
 
 import java.util.ArrayList;
 
@@ -60,17 +63,26 @@ public class RecyclerAdapterCarData extends RecyclerView.Adapter<RecyclerAdapter
     public class CarDataViewHolder extends RecyclerView.ViewHolder {
         private TextView itemCar;
         private TextView itemBarCode;
+        private TextView itemProductionDate;
+        private TextView itemSector;
+        private TextView itemRow;
 
         public CarDataViewHolder(View itemView) {
             super(itemView);
 
             itemCar = itemView.findViewById(R.id.itemCar);
             itemBarCode = itemView.findViewById(R.id.itemBarCode);
+            itemProductionDate = itemView.findViewById(R.id.itemProductionDate);
+            itemSector = itemView.findViewById(R.id.itemSector);
+            itemRow = itemView.findViewById(R.id.itemRow);
         }
 
         public void set(CarData carData) {
             itemCar.setText(carData.getCar());
             itemBarCode.setText(carData.getBarCode());
+            itemProductionDate.setText(carData.getProductionDateString());
+            itemSector.setText(carData.getSector());
+            itemRow.setText(carData.getRow());
         }
     }
 }

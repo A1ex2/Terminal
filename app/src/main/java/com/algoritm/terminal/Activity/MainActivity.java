@@ -1,8 +1,7 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,24 +15,26 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import com.algoritm.terminal.DataBase.SharedData;
+import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.UIManager;
+import com.algoritm.terminal.R;
+import com.algoritm.terminal.Objects.Reception;
+import com.algoritm.terminal.Adapters.ReceptionAdapter;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
-    private ArrayList<Reception> mReceptions = new ArrayList<>();
+    private ArrayList<Reception> mReceptions = SharedData.RECEPTION;
     private ProgressBar progressBar;
     private ReceptionAdapter adapter;
-
-    public static ArrayList<Sector> SECTORS = new ArrayList<>();
 
     public static final int ACTION_RECEPTION_LIST = 12;
     public static final int ACTION_SECTORS_LIST = 13;
@@ -61,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
 
-
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, login, password);
         dispatcher.start();
+
+        SOAP_Dispatcher dispatcher2 = new SOAP_Dispatcher(ACTION_SECTORS_LIST);
+        dispatcher2.start();
 
         adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
         mListView.setAdapter(adapter);
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 //uiManager.showToast(reception.toString());
 
                 Intent intent = new Intent(view.getContext(), DetailReception.class);
-                intent.putExtra("Reception", reception);
+                intent.putExtra("Reception", reception.getID());
                 startActivity(intent);
             }
         });
@@ -127,17 +130,13 @@ public class MainActivity extends AppCompatActivity {
             MainActivity target = mTarget.get();
 
             switch (msg.what) {
+
                 case ACTION_ConnectionError:
                     uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
                     break;
-
-                case ACTION_RECEPTION_LIST: {
-                    target.checkLoginListResult();
-                }
-                case ACTION_SECTORS_LIST: {
-                    target.checkSectorList();
-                }
-                break;
+                case ACTION_RECEPTION_LIST:
+                    target.checkReceptionListResult();
+                    break;
             }
         }
     }
@@ -159,71 +158,19 @@ public class MainActivity extends AppCompatActivity {
         return errorMessage;
     }
 
-    public void checkLoginListResult() {
+    public void checkReceptionListResult() {
         try {
-            int count = soapParam_Response.getPropertyCount();
-
-            for (int i = 0; i < count; i++) {
-                SoapObject receptionList = (SoapObject) soapParam_Response.getProperty(i);
-
-                Reception reception = new Reception();
-                reception.setID(receptionList.getPropertyAsString("ID"));
-                reception.setDescription(receptionList.getPropertyAsString("Description"));
-                reception.setAutoNumber(receptionList.getPropertyAsString("AutoNumber"));
-                reception.setDriver(receptionList.getPropertyAsString("Driver"));
-                reception.setDriverPhone(receptionList.getPropertyAsString("DriverPhone"));
-                reception.setInvoiceNumber(receptionList.getPropertyAsString("InvoiceNumber"));
-
-                ArrayList<CarData> carDataList = new ArrayList<>();
-
-                for (int j = 0; j < receptionList.getPropertyCount(); j++) {
-                    PropertyInfo pi = new PropertyInfo();
-                    receptionList.getPropertyInfo(j, pi);
-                    Object property = receptionList.getProperty(j);
-                    if (pi.name.equals("CarData") && property instanceof SoapObject) {
-                        SoapObject carDetail = (SoapObject) property;
-
-                        CarData carData = new CarData();
-                        carData.setCarID(carDetail.getPrimitivePropertyAsString("CarID"));
-                        carData.setCar(carDetail.getPrimitivePropertyAsString("Car"));
-                        carData.setBarCode(carDetail.getPrimitivePropertyAsString("BarCode"));
-                        carData.setSectorID(carDetail.getPrimitivePropertyAsString("SectorID"));
-                        carData.setSector(carDetail.getPrimitivePropertyAsString("Sector"));
-                        carData.setRow(carDetail.getPrimitivePropertyAsString("Row"));
-                        carData.setProductionDate(carDetail.getPrimitivePropertyAsString("ProductionDate"));
-
-                        carDataList.add(carData);
-                    }
-                }
-                reception.setCarData(carDataList);
-
-                mReceptions.add(reception);
-            }
+//            mReceptions.clear();
+//            mReceptions.addAll(SharedData.RECEPTION);
+//            mReceptions = SharedData.RECEPTION;
 
             adapter = new ReceptionAdapter(this, R.layout.item_reception, mReceptions);
             mListView.setAdapter(adapter);
 
             progressBar.setVisibility(ProgressBar.INVISIBLE);
 
-//            SOAP_Dispatcher dispatcher2 = new SOAP_Dispatcher(ACTION_SECTORS_LIST);
-//            dispatcher2.start();
-
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public void checkSectorList() {
-        int count = soapParam_Response.getPropertyCount();
-
-        for (int i = 0; i < count; i++) {
-            SoapObject sectorList = (SoapObject) soapParam_Response.getProperty(i);
-
-            Sector sector = new Sector();
-            sector.setID(sectorList.getPrimitivePropertyAsString("ID"));
-            sector.setName(sectorList.getPrimitivePropertyAsString("Name"));
-
-            SECTORS.add(sector);
         }
     }
 }

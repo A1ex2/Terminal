@@ -1,4 +1,4 @@
-package com.algoritm.terminal;
+package com.algoritm.terminal.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +16,8 @@ import android.widget.EditText;
 
 import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.UIManager;
+import com.algoritm.terminal.DataBase.SharedData;
+import com.algoritm.terminal.R;
 
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -170,12 +172,11 @@ public class Password extends AppCompatActivity {
 
     public void checkLoginListResult() {
         try {
-            int count = soapParam_Response.getPropertyCount();
 
-            for (int i = 0; i < count; i++) {
-                SoapObject login = (SoapObject) soapParam_Response.getProperty(i);
-                String name = login.getPropertyAsString("Description");
-                loginList.add(name);
+            loginList.clear();
+
+            for (int i = 0; i<SharedData.USERS.size();i++){
+                loginList.add(SharedData.USERS.get(i).getName());
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, loginList);
