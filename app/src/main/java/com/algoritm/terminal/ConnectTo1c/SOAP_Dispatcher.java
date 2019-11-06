@@ -2,6 +2,7 @@ package com.algoritm.terminal.ConnectTo1c;
 
 import com.algoritm.terminal.Activity.MainActivity;
 import com.algoritm.terminal.Activity.Password;
+import com.algoritm.terminal.DataBase.DataBaseHelper;
 import com.algoritm.terminal.DataBase.SharedData;
 import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.Objects.Reception;
@@ -140,6 +141,8 @@ public class SOAP_Dispatcher extends Thread {
 
             mReceptions.add(reception);
         }
+
+        SharedData.updateReceptionsDB();
     }
 
     void getLoginList() {

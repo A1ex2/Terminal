@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".Activity.CarActivity">
 
@@ -26,10 +26,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:text="@string/edit"
-            android:textSize="20sp"
             android:gravity="center"
-            android:textColor="#FFFFFFFF"/>
+            android:text="@string/edit"
+            android:textColor="#FFFFFFFF"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/imageOk"
@@ -50,9 +50,9 @@
             android:id="@+id/car"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginRight="20dp"
             android:textAllCaps="false"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -62,52 +62,53 @@
             android:id="@+id/barCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_gravity="right"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"
             android:textAllCaps="false"
             android:textSize="20sp"
             android:textStyle="bold"
-            tools:text="2000000588964"
-            android:layout_gravity="right"/>
+            tools:text="2000000588964" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textDate"
             android:layout_width="200dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:text="@string/textDate"
             android:textAllCaps="false"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editDate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="20sp"
+            android:layout_marginRight="10dp"
+            android:drawableRight="@drawable/ic_calendar"
             android:inputType="date"
-            android:drawableRight="@drawable/ic_calendar"/>
-<!--        <br.com.sapereaude.maskedEditText.MaskedEditText-->
-<!--            android:id="@+id/editDate"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:textSize="20sp"-->
-<!--            android:inputType="date"-->
-<!--            android:typeface="monospace"-->
-<!--            app:mask="##.##.####"-->
-<!--            app:allowed_chars="1234567890"-->
-<!--            app:keep_hint="true">-->
-<!--        </br.com.sapereaude.maskedEditText.MaskedEditText>-->
+            android:textSize="20sp" />
+        <!--        <br.com.sapereaude.maskedEditText.MaskedEditText-->
+        <!--            android:id="@+id/editDate"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:textSize="20sp"-->
+        <!--            android:inputType="date"-->
+        <!--            android:typeface="monospace"-->
+        <!--            app:mask="##.##.####"-->
+        <!--            app:allowed_chars="1234567890"-->
+        <!--            app:keep_hint="true">-->
+        <!--        </br.com.sapereaude.maskedEditText.MaskedEditText>-->
 
 
     </LinearLayout>
@@ -115,14 +116,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textSector"
             android:layout_width="200dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:text="@string/textSector"
@@ -134,22 +135,23 @@
             android:id="@+id/editSector"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textSize="30sp"
-            android:inputType="text"/>
+            android:layout_marginRight="10dp"
+            android:inputType="text"
+            android:textSize="40sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textRow"
             android:layout_width="200dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:text="@string/textRow"
@@ -161,8 +163,9 @@
             android:id="@+id/editRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:inputType="numberSigned" />
+            android:layout_marginRight="10dp"
+            android:inputType="numberSigned"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

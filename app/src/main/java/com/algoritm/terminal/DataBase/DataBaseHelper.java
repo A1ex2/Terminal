@@ -36,6 +36,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long id = 0;
 
         try {
+            CarData dbCarData = getCarData(carData.getReceptionID(), carData.getCarID());
+            if ((dbCarData.getCarID() != null) && (dbCarData.getCarID().equals(carData.getCarID()) & dbCarData.getReceptionID().equals(carData.getReceptionID()))) {
+                updateCarData(carData);
+            } else {
+
                 ContentValues values = new ContentValues();
                 values.put("ReceptionID", carData.getReceptionID());
                 values.put("carID", carData.getCarID());
@@ -45,10 +50,101 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 values.put("productionDate", carData.getProductionDateString());
 
                 id = db.insert("CarData", null, values);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateCarData(CarData carData) {
+        SQLiteDatabase db = getReadableDatabase();
+        int id = 0;
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put("ReceptionID", carData.getReceptionID());
+            values.put("carID", carData.getCarID());
+            values.put("barCode", carData.getBarCode());
+            values.put("sectorID", carData.getSectorID());
+            values.put("mRow", carData.getRow());
+            values.put("productionDate", carData.getProductionDateString());
+
+
+//            String receptionID = "'" + carData.getReceptionID() + "'";
+//            String carID = "'" + carData.getCarID() + "'";
+            String receptionID = carData.getReceptionID();
+            String carID = carData.getCarID();
+
+            id = db.update("CarData", values, "ReceptionID=? and carID=?", new String[]{receptionID, carID});
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public CarData getCarData(String receptionID, String carID) {
+        CarData carData = new CarData();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String select = "ReceptionID = '" + receptionID + "' and carID = '" + carID + "'";
+            cursor = db.query("CarData", null, select, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+
+                carData.setReceptionID(cursor.getString(cursor.getColumnIndex("ReceptionID")));
+                carData.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+                carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+                carData.setSectorID(cursor.getString(cursor.getColumnIndex("sectorID")));
+                carData.setRow(cursor.getString(cursor.getColumnIndex("mRow")));
+                carData.setProductionDate(cursor.getString(cursor.getColumnIndex("productionDate")));
+                carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return carData;
+    }
+
+        public ArrayList<CarData> getcarDataList() {
+        ArrayList<CarData> carDataArrayList = new ArrayList<>();
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query("CarData", null, null, null, null, null, null);
+
+            if (cursor.moveToNext()) {
+                while (!cursor.isAfterLast()) {
+                    CarData carData = new CarData();
+
+                    carData.setReceptionID(cursor.getString(cursor.getColumnIndex("ReceptionID")));
+                    carData.setCarID(cursor.getString(cursor.getColumnIndex("carID")));
+                    carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+                    carData.setSectorID(cursor.getString(cursor.getColumnIndex("sectorID")));
+                    carData.setRow(cursor.getString(cursor.getColumnIndex("mRow")));
+                    carData.setProductionDate(cursor.getString(cursor.getColumnIndex("productionDate")));
+                    carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
+
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return carDataArrayList;
     }
 
     public void insertSectors(ArrayList<Sector> sectors) {
