@@ -133,7 +133,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     carData.setProductionDate(cursor.getString(cursor.getColumnIndex("productionDate")));
                     carData.setBarCode(cursor.getString(cursor.getColumnIndex("barCode")));
 
+                    carDataArrayList.add(carData);
+
                     cursor.moveToNext();
+
                 }
             }
         } catch (Exception e) {
