@@ -63,15 +63,29 @@ public class DetailReception extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateLists();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                recyclerView.invalidate();
+                //updateLists();
             }
         }
 
+    }
+
+    private void updateLists() {
+        if (adapter == null) {
+            adapter = new RecyclerAdapterCarData(this, R.layout.item_activity_detail, reception.getCarData());
+            recyclerView.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

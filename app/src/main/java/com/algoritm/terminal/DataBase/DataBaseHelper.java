@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.Objects.Sector;
 import com.algoritm.terminal.Objects.User;
 
@@ -19,9 +20,35 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + User.TABLE_NAME + " ("
-                + User.COLUM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + User.COLUM_NAME + " TEXT NOT NULL)");
+        db.execSQL("CREATE TABLE CarData ("
+                + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "ReceptionID TEXT NOT NULL,"
+                + "carID TEXT NOT NULL,"
+                + "barCode TEXT NOT NULL,"
+                + "sectorID TEXT NOT NULL,"
+                + "mRow INTEGER NOT NULL,"
+                + "productionDate TEXT NOT NULL)");
+
+    }
+
+    public void insertCarData(CarData carData) {
+        SQLiteDatabase db = getReadableDatabase();
+        long id = 0;
+
+        try {
+                ContentValues values = new ContentValues();
+                values.put("ReceptionID", carData.getReceptionID());
+                values.put("carID", carData.getCarID());
+                values.put("barCode", carData.getBarCode());
+                values.put("sectorID", carData.getSectorID());
+                values.put("mRow", carData.getRow());
+                values.put("productionDate", carData.getProductionDateString());
+
+                id = db.insert("CarData", null, values);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void insertSectors(ArrayList<Sector> sectors) {

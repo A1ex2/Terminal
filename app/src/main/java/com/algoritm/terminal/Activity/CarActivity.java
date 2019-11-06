@@ -25,9 +25,13 @@ import com.algoritm.terminal.DataBase.SharedData;
 import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.R;
 import com.algoritm.terminal.Objects.Sector;
+import com.algoritm.terminal.Service.IntentServiceDataBase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CarActivity extends AppCompatActivity {
     private TextView car;
@@ -71,6 +75,8 @@ public class CarActivity extends AppCompatActivity {
                 carData.setRow(editRow.getText().toString());
                 SharedData.updateReception(carData);
 
+                IntentServiceDataBase.startInsertCarData(v.getContext(), carData);
+
                 Toast.makeText(v.getContext(), "Запись данных...", Toast.LENGTH_LONG).show();
                 setResult(Activity.RESULT_OK);
                 finish();
@@ -93,7 +99,9 @@ public class CarActivity extends AppCompatActivity {
 
         ArrayAdapter<Sector> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mSectors);
         editSector.setAdapter(adapter);
-//        editSector.setText(carData.getSector());
+        int spinnerPosition = adapter.getPosition(SharedData.getSector(carData.getSectorID()));
+        editSector.setSelection(spinnerPosition);
+
         editSector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -108,7 +116,10 @@ public class CarActivity extends AppCompatActivity {
 
         editRow.setText(carData.getRow());
 
-        dateAndTime.setTime(carData.getProductionDate());
+        Date date = carData.getProductionDate();
+        if (date.getTime() > 0) {
+            dateAndTime.setTime(date);
+        }
 
         editDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -195,6 +206,16 @@ public class CarActivity extends AppCompatActivity {
                     current = clean;
                     editDate.setText(current);
                     editDate.setSelection(sel < current.length() ? sel : current.length());
+
+                    try {
+
+                        DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+                        Date date = format.parse(current);
+                        dateAndTime.setTime(date);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

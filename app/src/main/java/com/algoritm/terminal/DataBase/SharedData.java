@@ -22,7 +22,7 @@ public class SharedData {
                     CarData mCarData = carDataArrayList.get(j);
                     if (mCarData.getCarID().equals(carData.getCarID())) {
                         mCarData.setProductionDate(carData.getProductionDate());
-                        mCarData.setSectorID(carData.getSector());
+                        mCarData.setSector(carData.getSector());
                         mCarData.setSectorID(carData.getSectorID());
                         mCarData.setRow(carData.getRow());
 
@@ -50,4 +50,18 @@ public class SharedData {
         }
         return reception;
     }
+
+    public static Sector getSector(String id) {
+        Sector sector = new Sector();
+        for (int i = 0; i < SECTORS.size(); i++) {
+            Sector mSector = SECTORS.get(i);
+            if (mSector.getID().equals(id)) {
+                sector = mSector;
+                break;
+            }
+
+        }
+        return sector;
+    }
+
 }

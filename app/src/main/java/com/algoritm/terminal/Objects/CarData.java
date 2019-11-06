@@ -9,14 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CarData implements Parcelable {
-    public String getCarID() {
-        return carID;
-    }
-
-    public void setCarID(String carID) {
-        this.carID = carID;
-    }
-
     private String ReceptionID;
     private String carID;
     private String car;
@@ -27,6 +19,15 @@ public class CarData implements Parcelable {
     private Date productionDate;
 
     public CarData() {
+    }
+
+
+    public String getCarID() {
+        return carID;
+    }
+
+    public void setCarID(String carID) {
+        this.carID = carID;
     }
 
     public String getReceptionID() {
@@ -82,11 +83,12 @@ public class CarData implements Parcelable {
     }
 
     public String getProductionDateString() {
-
-        String pattern = "dd.MM.yyyy";
-        DateFormat df = new SimpleDateFormat(pattern);
-        String date = df.format(productionDate);
-
+        String date = "";
+        if (productionDate.getTime() > 0) {
+            String pattern = "dd.MM.yyyy";
+            DateFormat df = new SimpleDateFormat(pattern);
+            date = df.format(productionDate);
+        }
         return date;
     }
 
