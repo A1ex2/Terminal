@@ -98,6 +98,10 @@ public class CarData implements Parcelable {
 
     public void setProductionDate(String string) throws ParseException {
         DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        if (string.equals("")){
+            string = "01.01.0001";
+        }
+
         Date date = format.parse(string);
         this.productionDate = date;
     }
