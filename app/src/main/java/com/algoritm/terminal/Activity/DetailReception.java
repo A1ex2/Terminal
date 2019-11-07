@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
+import com.algoritm.terminal.ConnectTo1c.SOAP_Objects;
 import com.algoritm.terminal.DataBase.SharedData;
 import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.R;
@@ -24,6 +27,8 @@ import com.algoritm.terminal.Objects.Reception;
 import com.algoritm.terminal.Adapters.RecyclerAdapterCarData;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.ksoap2.serialization.SoapObject;
 
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -38,6 +43,8 @@ public class DetailReception extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1;
     private static final int REQUEST_CODE_SCAN = 0x0000c0de;
+
+    public static final int ACTION_SET_RECEPTION = 14;
 
 
     @Override
@@ -88,11 +95,23 @@ public class DetailReception extends AppCompatActivity {
                 break;
 
             case R.id.saveCB:
-
+                setCB();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setCB() {
+//        SoapObject soapObject = SOAP_Objects.getReception(reception);
+
+        SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String login = preferences.getString("Login", "");
+        String password = preferences.getString("Password", "");
+
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_RECEPTION, login, password);
+        dispatcher.soap_Inquiry = SOAP_Objects.getReception(reception);
+        dispatcher.start();
     }
 
     private void scanBarCode() {
@@ -122,8 +141,6 @@ public class DetailReception extends AppCompatActivity {
 //                    Log.d("MainActivity", "cancelled scan");
 //                    Toast.makeText(this, "cancelled", Toast.LENGTH_SHORT).show();
                 } else {
-//                    Log.d("MainActivity", "Scanned");
-//                    Toast.makeText(this, "Scanned -> " + Result.getContents(), Toast.LENGTH_SHORT).show();
                     String barCode = Result.getContents();
                     CarData carData = getCarDataByBarCode(barCode);
                     if (carData.getCarID() == null) {

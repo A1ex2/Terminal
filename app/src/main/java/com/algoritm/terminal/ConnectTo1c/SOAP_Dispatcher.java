@@ -1,5 +1,6 @@
 package com.algoritm.terminal.ConnectTo1c;
 
+import com.algoritm.terminal.Activity.DetailReception;
 import com.algoritm.terminal.Activity.MainActivity;
 import com.algoritm.terminal.Activity.Password;
 import com.algoritm.terminal.DataBase.DataBaseHelper;
@@ -24,7 +25,9 @@ public class SOAP_Dispatcher extends Thread {
     public static final Integer soapParam_timeout = 100;
     public static String soapParam_pass = "31415926";
     public static String soapParam_user = "Администратор";
-    public static String soapParam_URL = "http://gate.algoritm.org.ua:8091/blg_log_test/ws/terminal.1cws";
+//    public static String soapParam_URL = "http://gate.algoritm.org.ua:8091/blg_log_test/ws/terminal.1cws";
+    public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
+    public SoapObject soap_Inquiry;
 
     int timeout;
     String URL;
@@ -60,14 +63,21 @@ public class SOAP_Dispatcher extends Thread {
             case Password.ACTION_VERIFY:
                 login();
                 break;
+
             case Password.ACTION_LOGIN_LIST:
                 getLoginList();
                 break;
+
             case MainActivity.ACTION_RECEPTION_LIST:
                 getReceptionList();
                 break;
+
             case MainActivity.ACTION_SECTORS_LIST:
                 getSectors();
+                break;
+
+            case DetailReception.ACTION_SET_RECEPTION:
+                setCB();
                 break;
         }
 
@@ -87,6 +97,14 @@ public class SOAP_Dispatcher extends Thread {
                 MainActivity.soapHandler.sendEmptyMessage(MainActivity.ACTION_ConnectionError);
             }
         }
+    }
+
+    private void setCB() {
+        String method = "setReception";
+        String action = NAMESPACE + "#setReception:" + method;
+        SoapObject request = new SoapObject(NAMESPACE, method);
+        request.addProperty("Reception", soap_Inquiry);
+        soap_Response = callWebService(request, action);
     }
 
     void getReceptionList() {
