@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/saveCB"
+        android:icon="@drawable/ic_save"
+        android:title="@string/saveCB"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/searchBarCode"
+        android:icon="@drawable/ic_barcode"
+        android:title="@string/searchBarCode"
+        android:visible="true"
+        app:showAsAction="always" />
+</menu>

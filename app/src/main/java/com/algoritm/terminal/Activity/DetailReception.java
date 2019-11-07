@@ -1,20 +1,32 @@
 package com.algoritm.terminal.Activity;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.algoritm.terminal.DataBase.SharedData;
 import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.R;
 import com.algoritm.terminal.Objects.Reception;
 import com.algoritm.terminal.Adapters.RecyclerAdapterCarData;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.ArrayList;
+import java.util.Formatter;
 
 public class DetailReception extends AppCompatActivity {
     private Reception reception;
@@ -25,6 +37,7 @@ public class DetailReception extends AppCompatActivity {
     private RecyclerAdapterCarData adapter;
 
     private static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_SCAN = 0x0000c0de;
 
 
     @Override
@@ -56,11 +69,42 @@ public class DetailReception extends AppCompatActivity {
         adapter.setActionListener(new RecyclerAdapterCarData.ActionListener() {
             @Override
             public void onClick(CarData carData) {
-                Intent intent = new Intent(DetailReception.this, CarActivity.class);
-                intent.putExtra("CarData", carData);
-                startActivityForResult(intent, REQUEST_CODE);
+                viewCarData(carData);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_reception, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.searchBarCode:
+                scanBarCode();
+                break;
+
+            case R.id.saveCB:
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void scanBarCode() {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setCaptureActivity(ScannerActivity.class);
+        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setPrompt(getString(R.string.camera_to_the_barcode));
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.initiateScan();
     }
 
     @Override
@@ -71,13 +115,76 @@ public class DetailReception extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                //updateLists();
+        if (requestCode == REQUEST_CODE_SCAN) {
+            IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (Result != null) {
+                if (Result.getContents() == null) {
+//                    Log.d("MainActivity", "cancelled scan");
+//                    Toast.makeText(this, "cancelled", Toast.LENGTH_SHORT).show();
+                } else {
+//                    Log.d("MainActivity", "Scanned");
+//                    Toast.makeText(this, "Scanned -> " + Result.getContents(), Toast.LENGTH_SHORT).show();
+                    String barCode = Result.getContents();
+                    CarData carData = getCarDataByBarCode(barCode);
+                    if (carData.getCarID() == null) {
+                        String message = new Formatter().format(getString(R.string.no_car_by_barcode), barCode).toString();
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle(getString(R.string.cancelled_scan)).
+                                setMessage(message).
+                                setCancelable(false).
+                                setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).
+                                setPositiveButton(getString(R.string.scan_more), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        scanBarCode();
+                                    }
+                                });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    } else {
+                        viewCarData(carData);
+                    }
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
             }
         }
 
+        //super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == REQUEST_CODE) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                //updateLists();
+//            }
+//        }
+
+    }
+
+    private CarData getCarDataByBarCode(String barCode) {
+        ArrayList<CarData> carDataArrayList = reception.getCarData();
+        CarData carData = new CarData();
+        for (int i = 0; i < carDataArrayList.size(); i++) {
+            CarData mCarData = carDataArrayList.get(i);
+            if (barCode.equals(mCarData.getBarCode())) {
+                carData = mCarData;
+                break;
+            }
+        }
+
+        return carData;
+    }
+
+    private void viewCarData(CarData carData) {
+        Intent intent = new Intent(DetailReception.this, CarActivity.class);
+        intent.putExtra("CarData", carData);
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     private void updateLists() {
