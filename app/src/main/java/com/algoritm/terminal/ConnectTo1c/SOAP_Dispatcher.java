@@ -27,7 +27,7 @@ public class SOAP_Dispatcher extends Thread {
     public static String soapParam_user = "Администратор";
 //    public static String soapParam_URL = "http://gate.algoritm.org.ua:8091/blg_log_test/ws/terminal.1cws";
     public static String soapParam_URL = "http://192.168.1.4:8090/blg_log/ws/terminal.1cws";
-    public SoapObject soap_Inquiry;
+    public String string_Inquiry;
 
     int timeout;
     String URL;
@@ -100,11 +100,13 @@ public class SOAP_Dispatcher extends Thread {
     }
 
     private void setCB() {
+
         String method = "setReception";
         String action = NAMESPACE + "#setReception:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
-        request.addSoapObject(soap_Inquiry);
+        request.addProperty("Reception", string_Inquiry );
         soap_Response = callWebService(request, action);
+
     }
 
     void getReceptionList() {

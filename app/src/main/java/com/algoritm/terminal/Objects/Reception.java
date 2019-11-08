@@ -3,10 +3,13 @@ package com.algoritm.terminal.Objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 
 public class Reception implements Parcelable {
+
     private String ID;
     private String Description;
     private String AutoNumber;

@@ -103,15 +103,17 @@ public class DetailReception extends AppCompatActivity {
     }
 
     private void setCB() {
-//        SoapObject soapObject = SOAP_Objects.getReception(reception);
 
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
         String login = preferences.getString("Login", "");
         String password = preferences.getString("Password", "");
 
         SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_SET_RECEPTION, login, password);
-        dispatcher.soap_Inquiry = SOAP_Objects.getReception(reception);
+        String stringReception = SOAP_Objects.getReception(reception);
+        dispatcher.string_Inquiry = stringReception;
+
         dispatcher.start();
+
     }
 
     private void scanBarCode() {

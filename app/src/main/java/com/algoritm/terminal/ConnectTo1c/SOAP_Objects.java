@@ -1,41 +1,68 @@
 package com.algoritm.terminal.ConnectTo1c;
 
-import com.algoritm.terminal.Activity.Password;
+
 import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.Objects.Reception;
-
-import org.ksoap2.serialization.SoapObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
 public class SOAP_Objects {
 
-    public static SoapObject getReception(Reception reception) {
+    public static String getReception(Reception reception) {
+        JSONReception jsonReception = new JSONReception(reception);
 
-        SoapObject soapObject = new SoapObject("Reception", "Reception");
-        soapObject.addProperty("ID", reception.getID());
-        soapObject.addProperty("Description", reception.getDescription());
-        soapObject.addProperty("AutoNumber", reception.getAutoNumber());
-        soapObject.addProperty("Driver", reception.getDriver());
-        soapObject.addProperty("DriverPhone", reception.getDriverPhone());
-        soapObject.addProperty("InvoiceNumber", reception.getInvoiceNumber());
+        Gson gson = new GsonBuilder().create();
 
-        ArrayList<CarData> carDataArrayList = reception.getCarData();
-        for (int i = 0; i < carDataArrayList.size(); i++) {
-            CarData carData = carDataArrayList.get(i);
+        String stringReception = gson.toJson(jsonReception);
 
-            SoapObject soapCarData = new SoapObject("CarData", "CarData");
-            soapCarData.addProperty("CarID", carData.getCarID());
-            soapCarData.addProperty("Car", carData.getCar());
-            soapCarData.addProperty("BarCode", carData.getBarCode());
-            soapCarData.addProperty("SectorID", carData.getSectorID());
-            soapCarData.addProperty("Sector", carData.getSector());
-            soapCarData.addProperty("Row", carData.getRow());
-            soapCarData.addProperty("ProductionDate", carData.getProductionDateString());
+        return stringReception;
+    }
 
-            soapObject.addProperty("CarData", soapCarData);
+    private static class JSONReception {
+        @SerializedName("ID")
+        String ID;
+
+        @SerializedName("CarData")
+        ArrayList<JSONCarData> mJSONCarData = new ArrayList<>();
+
+        JSONReception(Reception reception) {
+            ID = reception.getID();
+
+            ArrayList<CarData> carDataArrayList = reception.getCarData();
+            for (int i = 0; i < carDataArrayList.size(); i++) {
+                CarData carData = carDataArrayList.get(i);
+                JSONCarData jsonCarData = new JSONCarData(carData);
+                mJSONCarData.add(jsonCarData);
+            }
         }
 
-        return soapObject;
+        private static class JSONCarData {
+            @SerializedName("ReceptionID")
+            String ReceptionID;
+
+            @SerializedName("carID")
+            String carID;
+
+            @SerializedName("sectorID")
+            String sectorID;
+
+            @SerializedName("row")
+            String row;
+
+            @SerializedName("productionDate")
+            String productionDate;
+
+            JSONCarData(CarData carData) {
+                ReceptionID = carData.getReceptionID();
+                carID = carData.getCarID();
+                sectorID = carData.getSectorID();
+                row = carData.getRow();
+                productionDate = carData.getProductionDateString();
+
+            }
+        }
     }
 }
