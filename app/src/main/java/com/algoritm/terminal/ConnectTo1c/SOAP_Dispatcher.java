@@ -103,7 +103,7 @@ public class SOAP_Dispatcher extends Thread {
         String method = "setReception";
         String action = NAMESPACE + "#setReception:" + method;
         SoapObject request = new SoapObject(NAMESPACE, method);
-        request.addProperty("Reception", soap_Inquiry);
+        request.addSoapObject(soap_Inquiry);
         soap_Response = callWebService(request, action);
     }
 

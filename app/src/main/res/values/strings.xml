@@ -22,7 +22,7 @@
     <string name="camera_to_the_barcode">Наведите камеру на штрихкод</string>
     <string name="turn_off_flashlight">Выключить фонарик</string>
     <string name="turn_on_flashlight">Включить фонарик</string>
-    <string name="no_car_by_barcode">В этом списке нет машины с %s штрихкодом</string>
+    <string name="no_car_by_barcode">По штрихкоду %s нет машины в этом списке</string>
     <string name="cancelled_scan">Ошибка поиска</string>
     <string name="cancel">Отмена</string>
     <string name="scan_more">Отсканировать еще раз</string>

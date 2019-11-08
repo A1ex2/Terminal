@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,10 +13,11 @@ import com.algoritm.terminal.R;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
-public class ScannerActivity extends AppCompatActivity implements DecoratedBarcodeView.TorchListener{
+public class ScannerActivity extends AppCompatActivity implements DecoratedBarcodeView.TorchListener {
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
-    private Button switchFlashlightButton;
+    private ImageButton switchFlashlightButton;
+    //    private Button switchFlashlightButton;
     private boolean isFlashLightOn = false;
 
     @Override
@@ -27,8 +29,9 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
 
         barcodeScannerView.setTorchListener(this);
 
-        switchFlashlightButton = (Button) findViewById(R.id.switch_flashlight);
-        switchFlashlightButton.setText(getText(R.string.turn_on_flashlight));
+        switchFlashlightButton = findViewById(R.id.switch_flashlight);
+//        switchFlashlightButton.setText(getText(R.string.turn_on_flashlight));
+        switchFlashlightButton.setImageResource(R.drawable.ic_on_flash);
 
         if (!hasFlash()) {
             switchFlashlightButton.setVisibility(View.GONE);
@@ -64,12 +67,15 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
 
     @Override
     public void onTorchOn() {
-        switchFlashlightButton.setText(R.string.turn_off_flashlight);
+//      switchFlashlightButton.setText(R.string.turn_off_flashlight);
+        switchFlashlightButton.setImageResource(R.drawable.ic_off_flash);
     }
 
     @Override
     public void onTorchOff() {
-        switchFlashlightButton.setText(getText(R.string.turn_on_flashlight));
+//      switchFlashlightButton.setText(getText(R.string.turn_on_flashlight));
+        switchFlashlightButton.setImageResource(R.drawable.ic_on_flash);
+
     }
 
     @Override
