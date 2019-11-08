@@ -159,14 +159,16 @@ public class Password extends AppCompatActivity {
         Boolean isLoginSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
 
         if (isLoginSuccess) {
+
             uiManager.showToast(getString(R.string.passwordIncorrect) + soapParam_Response.getPropertyAsString("Name"));
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
 
-        } else
+        } else {
             uiManager.showToast(getString(R.string.passwordNotIncorrect));
+        }
 
     }
 
@@ -175,7 +177,7 @@ public class Password extends AppCompatActivity {
 
             loginList.clear();
 
-            for (int i = 0; i<SharedData.USERS.size();i++){
+            for (int i = 0; i < SharedData.USERS.size(); i++) {
                 loginList.add(SharedData.USERS.get(i).getName());
             }
 
@@ -185,6 +187,7 @@ public class Password extends AppCompatActivity {
             acTextView.setAdapter(adapter);
 
         } catch (Exception e) {
+
             e.printStackTrace();
 
         }

@@ -96,6 +96,13 @@ public class SOAP_Dispatcher extends Thread {
             } else {
                 MainActivity.soapHandler.sendEmptyMessage(MainActivity.ACTION_ConnectionError);
             }
+        }else if (ACTION == DetailReception.ACTION_SET_RECEPTION){
+            if (soap_Response != null) {
+                DetailReception.soapParam_Response = soap_Response;
+                DetailReception.soapHandler.sendEmptyMessage(ACTION);
+            } else {
+                DetailReception.soapHandler.sendEmptyMessage(DetailReception.ACTION_ConnectionError);
+            }
         }
     }
 

@@ -12,6 +12,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.algoritm.terminal.ConnectTo1c.SOAP_Dispatcher;
 import com.algoritm.terminal.ConnectTo1c.SOAP_Objects;
+import com.algoritm.terminal.ConnectTo1c.UIManager;
 import com.algoritm.terminal.DataBase.SharedData;
 import com.algoritm.terminal.Objects.CarData;
 import com.algoritm.terminal.R;
@@ -28,8 +31,10 @@ import com.algoritm.terminal.Adapters.RecyclerAdapterCarData;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Formatter;
 
@@ -45,6 +50,13 @@ public class DetailReception extends AppCompatActivity {
     private static final int REQUEST_CODE_SCAN = 0x0000c0de;
 
     public static final int ACTION_SET_RECEPTION = 14;
+    public static final int ACTION_ConnectionError = 0;
+
+    public static UIManager uiManager;
+    public static SoapFault responseFault;
+
+    public static SoapObject soapParam_Response;
+    public static Handler soapHandler;
 
 
     @Override
@@ -54,7 +66,9 @@ public class DetailReception extends AppCompatActivity {
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        reception = getIntent().getParcelableExtra("Reception");
+        uiManager = new UIManager(this);
+        soapHandler = new incomingHandler(this);
+
         String id = getIntent().getStringExtra("Reception");
         reception = SharedData.getReception(id);
 
@@ -214,4 +228,61 @@ public class DetailReception extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+    class incomingHandler extends Handler {
+        private final WeakReference<DetailReception> mTarget;
+
+        public incomingHandler(DetailReception context) {
+            mTarget = new WeakReference<>(context);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            DetailReception target = mTarget.get();
+
+            switch (msg.what) {
+                case ACTION_ConnectionError:
+                    uiManager.showToast(getString(R.string.errorConnection) + getSoapErrorMessage());
+                    break;
+                case ACTION_SET_RECEPTION: {
+                    target.checkSetReception();
+                }
+                break;
+            }
+        }
+    }
+
+    private void checkSetReception() {
+
+        Boolean isSaveSuccess = Boolean.parseBoolean(soapParam_Response.getPropertyAsString("Result"));
+
+        if (isSaveSuccess) {
+
+            uiManager.showToast(getString(R.string.success));
+
+            finish();
+
+        } else {
+            uiManager.showToast(soapParam_Response.getPropertyAsString("Description"));
+        }
+
+    }
+
+    private String getSoapErrorMessage() {
+
+        String errorMessage;
+
+        if (responseFault == null)
+            errorMessage = getString(R.string.textNoInternet);
+        else {
+            try {
+                errorMessage = responseFault.faultstring;
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage = getString(R.string.unknownError);
+            }
+        }
+        return errorMessage;
+    }
+
 }
