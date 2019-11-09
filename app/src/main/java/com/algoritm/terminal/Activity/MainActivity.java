@@ -36,8 +36,13 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ReceptionAdapter adapter;
 
+    private String login;
+    private String password;
+
     public static final int ACTION_RECEPTION_LIST = 12;
     public static final int ACTION_SECTORS_LIST = 13;
+
+    public static final int REQUEST_CODE_UPDATE_RECEPTION = 15;
 
     public static final int ACTION_ConnectionError = 0;
     public static UIManager uiManager;
@@ -55,16 +60,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mListView = findViewById(R.id.listReception);
+        progressBar = findViewById(R.id.progressBar);
 
         uiManager = new UIManager(this);
         soapHandler = new incomingHandler(this);
 
         SharedPreferences preferences = getSharedPreferences("MyPref", MODE_PRIVATE);
-        String login = preferences.getString("Login", "");
-        String password = preferences.getString("Password", "");
+        login = preferences.getString("Login", "");
+        password = preferences.getString("Password", "");
 
-        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, login, password);
-        dispatcher.start();
+        getUpdateReceptionList();
+//        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, login, password);
+//        dispatcher.start();
 
         SOAP_Dispatcher dispatcher2 = new SOAP_Dispatcher(ACTION_SECTORS_LIST);
         dispatcher2.start();
@@ -81,13 +88,19 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(view.getContext(), DetailReception.class);
                 intent.putExtra("Reception", reception.getID());
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_UPDATE_RECEPTION);
             }
         });
 
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(ProgressBar.VISIBLE);
     }
+
+    private void getUpdateReceptionList() {
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+
+        SOAP_Dispatcher dispatcher = new SOAP_Dispatcher(ACTION_RECEPTION_LIST, login, password);
+        dispatcher.start();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,7 +129,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_UPDATE_RECEPTION) {
 
+            getUpdateReceptionList();
+
+        }
     }
 
     class incomingHandler extends Handler {

@@ -113,7 +113,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return carData;
     }
 
-        public ArrayList<CarData> getcarDataList() {
+    public ArrayList<CarData> getCarDataList() {
         ArrayList<CarData> carDataArrayList = new ArrayList<>();
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = null;
@@ -148,6 +148,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         return carDataArrayList;
+    }
+
+    public void deleteCarData(CarData carData) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        String receptionID = carData.getReceptionID();
+        String carID = carData.getCarID();
+
+        db.delete("CarData", "ReceptionID=? and carID=?", new String[]{receptionID, carID});
     }
 
     public void insertSectors(ArrayList<Sector> sectors) {

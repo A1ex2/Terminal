@@ -22,7 +22,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.ScannerActivity"></activity>
+        <receiver
+            android:name=".Service.MyReceiver"
+            android:enabled="true"
+            android:exported="false"></receiver>
+
+        <service
+            android:name=".Service.MyService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".Activity.ScannerActivity" />
 
         <service
             android:name=".Service.IntentServiceDataBase"

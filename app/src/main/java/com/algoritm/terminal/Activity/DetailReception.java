@@ -260,6 +260,7 @@ public class DetailReception extends AppCompatActivity {
 
             uiManager.showToast(getString(R.string.success));
 
+            setResult(MainActivity.REQUEST_CODE_UPDATE_RECEPTION);
             finish();
 
         } else {
